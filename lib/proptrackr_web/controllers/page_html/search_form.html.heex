@@ -1,0 +1,120 @@
+<.error :if={@changeset.action}>
+  Oops, something went wrong! Please check the errors below.
+</.error>
+
+<.simple_form :let={f} for={@changeset} action={@action} method="get">
+  <div class="relative mb-10 w-full flex items-center justify-between rounded-md">
+    <svg class="absolute left-2 block h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8" class=""></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65" class=""></line>
+    </svg>
+    <input id="search" type="name" name="search" value={@params["search"] || ""} class="h-12 w-full cursor-text rounded-md border border-gray-100 bg-gray-100 py-4 pr-40 pl-12 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" placeholder="Search by description, name, city OR area" />
+  </div>
+  <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
+    <div class="flex flex-col">
+      <.input id="type" type="select" label="Type" options={["Rent", "Sale"]} name="type" value={@params["type"]} />
+    </div>
+    <div class="flex flex-col">
+      <.input id="country" field={f[:country]} type="select" label="Country" options={@countries} name="country" value={@params["country"]} />
+    </div>
+    <div class="flex flex-col">
+      <.input id="city" field={f[:city]} type="select" label="City" multiple={true} options={@cities} name="city[]" value={@params["city[]"]} />
+    </div>
+    <div class="flex flex-col">
+      <.input id="area" field={f[:area]} type="select" label="Area" multiple={true} options={@areas} name="area[]" value={@params["area[]"]} />
+    </div>
+  </div>
+  <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
+    <div class="flex flex-col">
+      <.input
+        id="min_price"
+        field={f[:min_price]}
+        type="text"
+        label="Minimum Price"
+        name="min_price"
+        value={@params["min_price"] || ""}
+        data-error="Minimum price must be greater than or equal to 0"
+      />
+    </div>
+    <div class="flex flex-col">
+      <.input
+        id="max_price"
+        field={f[:max_price]}
+        type="text"
+        label="Maximum Price"
+        name="max_price"
+        value={@params["max_price"] || ""}
+        data-error="Maximum price must be greater than or equal to 0"
+      />
+    </div>
+    <div class="flex flex-col">
+      <.input
+        id="min_rooms"
+        field={f[:min_rooms]}
+        type="text"
+        label="Minimum rooms"
+        name="min_rooms"
+        value={@params["min_rooms"] || ""}
+        data-error="Minimum rooms must be greater than or equal to 1"
+      />
+    </div>
+    <div class="flex flex-col">
+      <.input
+        id="max_rooms"
+        field={f[:max_rooms]}
+        type="text"
+        label="Maximum rooms"
+        name="max_rooms"
+        value={@params["max_rooms"] || ""}
+        data-error="Maximum rooms must be greater than or equal to 1"
+      />
+    </div>
+  </div>
+  <:actions>
+    <.button type="submit" id="search_button">Search</.button>
+  </:actions>
+</.simple_form>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const minPriceInput = document.getElementById("min_price");
+  const maxPriceInput = document.getElementById("max_price");
+  const minRoomsInput = document.getElementById("min_rooms");
+  const maxRoomsInput = document.getElementById("max_rooms");
+  const form = minPriceInput.closest("form");
+
+  form.addEventListener("submit", function(event) {
+    const minPriceValue = parseInt(minPriceInput.value, 10);
+    const maxPriceValue = parseInt(maxPriceInput.value, 10);
+    const minRoomsValue = parseInt(minRoomsInput.value, 10);
+    const maxRoomsValue = parseInt(maxRoomsInput.value, 10);
+
+    let errorMessage = '';
+
+    if (minPriceValue < 0) {
+      errorMessage = minPriceInput.dataset.error;
+      minPriceInput.focus();
+    } else if (maxPriceValue < 0) {
+      errorMessage = maxPriceInput.dataset.error;
+      maxPriceInput.focus();
+    } else if (minPriceValue > maxPriceValue) {
+      errorMessage = "Minimum price must be less than or equal to maximum price";
+      minPriceInput.focus();
+    } else if (minRoomsValue < 1) {
+      errorMessage = minRoomsInput.dataset.error;
+      minRoomsInput.focus();
+    } else if (maxRoomsValue < 1) {
+      errorMessage = maxRoomsInput.dataset.error;
+      maxRoomsInput.focus();
+    } else if (minRoomsValue > maxRoomsValue) {
+      errorMessage = "Minimum rooms must be less than or equal to maximum rooms";
+      minRoomsInput.focus();
+    }
+
+    if (errorMessage) {
+      event.preventDefault();
+      alert(errorMessage);
+    }
+  });
+});
+</script>

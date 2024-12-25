@@ -1,0 +1,50 @@
+<.header>
+  Advertisement <%= @advertisement.id %>
+  <:subtitle>This is an advertisement record from your database.</:subtitle>
+  <:actions>
+    <%= if Proptrackr.Authentication.load_current_user(@conn) do %>
+    <.link href={~p"/advertisements/#{@advertisement}/edit"}>
+      <.button id="edit_button">Edit Advertisement</.button>
+    </.link>
+    <% end %>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Title"><%= @advertisement.title %></:item>
+  <:item title="Description"><%= @advertisement.description %></:item>
+  <!-- <%=# <:item title="Reference"><%= @advertisement.reference %></:item> %> -->
+  <:item title="Country"><%= @advertisement.country %></:item>
+  <:item title="City"><%= @advertisement.city %></:item>
+  <:item title="Area"><%= @advertisement.area %></:item>
+  <:item title="Street"><%= @advertisement.street %></:item>
+  <:item title="Price"><%= @advertisement.price %></:item>
+  <:item title="Recommended Price"><%= Number.Currency.number_to_currency(@advertisement.recommended_price) %></:item>
+  <:item title="Square meters"><%= @advertisement.square_meters %></:item>
+  <:item title="Rooms"><%= @advertisement.rooms %></:item>
+  <:item title="Floor"><%= @advertisement.floor %></:item>
+  <:item title="Total floors"><%= @advertisement.total_floors %></:item>
+  <:item title="State"><%= @advertisement.state %></:item>
+  <:item title="Type"><%= @advertisement.type %></:item>
+  <:item title="Phone Number"><%= @advertisement.phone_number %></:item>
+
+  <!-- Displaying Uploaded Images -->
+  <:item title="Images">
+    <%= if @advertisement.photo_paths && length(@advertisement.photo_paths) > 0 do %>
+      <div class="image-gallery">
+        <%= for photo_path <- @advertisement.photo_paths do %>
+          <img 
+            src={ photo_path}
+            alt="Advertisement Photo"
+            class="w-64 h-64 object-cover"
+          />
+        <% end %>
+      </div>
+    <% else %> 
+      <p>No images available</p>
+    <% end %>
+  </:item>
+</.list>
+
+<.back navigate={~p"/advertisements"}>To advertisements page</.back>
+<.back navigate={~p"/"}>To main page</.back>

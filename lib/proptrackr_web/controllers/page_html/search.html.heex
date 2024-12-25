@@ -1,0 +1,15 @@
+<.header>
+  Search
+</.header>
+
+
+<div>
+  <div class="flex flex-row">
+    <div class="basis-1/4 rounded-xl border border-gray-200 bg-white p-6 shadow-lg mr-4">
+      <.search_form changeset={@changeset} action="/search"  params={@params} countries={@countries} cities={@cities} areas={@areas} locations={@locations}/>
+    </div>
+    <div class="basis-3/4">
+      <.search_results_form advertisements={@advertisements}/>
+    </div>
+  </div>
+</div>

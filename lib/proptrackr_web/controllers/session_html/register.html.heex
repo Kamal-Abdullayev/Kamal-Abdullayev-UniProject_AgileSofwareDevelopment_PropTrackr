@@ -1,0 +1,13 @@
+<.header>
+  Register
+</.header>
+
+<.simple_form :let={f} for={@changeset} action={~p"/register"}>
+  <.input id="firstname" field={f[:firstname]} type="text" label="firstname" />
+  <.input id="lastname" field={f[:lastname]} type="text" label="lastname" />
+  <.input id="email" field={f[:email]} type="text" label="Email" />
+  <.input id="password" field={f[:password]} type="password" label="Password" />
+  <:actions>
+    <.button id="register">Register</.button>
+  </:actions>
+</.simple_form>

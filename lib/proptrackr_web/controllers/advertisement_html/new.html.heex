@@ -1,0 +1,9 @@
+<.header>
+  New Advertisement
+  <:subtitle>Use this form to manage advertisement records in your database.</:subtitle>
+</.header>
+
+<.advertisement_form changeset={@changeset} action={~p"/advertisements"} method="put" countries={@countries} cities={@cities} areas={@areas} existing_images={@existing_images}/>
+
+<.back navigate={~p"/advertisements"}>Back to advertisements</.back>
+

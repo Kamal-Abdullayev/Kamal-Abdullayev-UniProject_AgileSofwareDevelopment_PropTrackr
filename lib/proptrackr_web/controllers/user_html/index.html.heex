@@ -1,0 +1,36 @@
+<.header>
+  Listing Users
+</.header>
+
+<.table id="users" rows={@users} row_click={&JS.navigate(~p"/users/#{&1}")}>
+  <:col :let={user} label="firstname"><%= user.firstname %></:col>
+  <:col :let={user} label="birthdate"><%= user.birthdate %></:col>
+  <:col :let={user} label="email"><%= user.email %></:col>
+  <:col :let={user} label="account status"><%= if user.is_blocked do %>
+      <span class="inline-flex items-center bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+        <span class="w-2 h-2 me-1 bg-red-500 rounded-full"></span>
+          Blocked
+      </span>
+      <% else %>
+        <span class="inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+          <span class="w-2 h-2 me-1 bg-green-500 rounded-full"></span>
+            Active
+        </span>
+      <% end %></:col>
+  <:action :let={user}>
+  <.link id="block"  href={~p"/users/#{user}/block"} method="patch" data-confirm="Are you sure?" class="w-full text-center text-black hover:text-blue-600">
+      <%= if user.is_blocked, do: "Unblock", else: "Block" %>
+    </.link>
+  </:action>
+  <:action :let={user}>
+    <div class="sr-only">
+      <.link navigate={~p"/users/#{user}"}>Show</.link>
+    </div>
+    <.link id="edit-button" navigate={~p"/users/#{user}/admin/edit"} class="w-full text-center text-black hover:text-blue-600">Edit</.link>
+  </:action>
+  <:action :let={user}>
+    <.link id={"delete-user-#{user.id}"} href={~p"/users/#{user}/admin/delete"} method="delete" data-confirm="Are you sure?" class="w-full text-center text-black hover:text-blue-600">
+      Delete
+    </.link>
+  </:action>
+</.table>

@@ -1,0 +1,24 @@
+<%= for ad <- @advertisements do %>
+  <div class="block bg-white rounded-lg shadow w-full flex-row flex mb-10">
+    <a href={~p"/advertisements/#{ad.id}"}>
+      <%= if ad.photo_paths do %>
+        <img 
+          src={~p"/uploads/#{ad.photo_paths}"} 
+          alt="Advertisement Photo" 
+          class="w-64 h-64 object-cover" 
+        />
+      <% else %>
+        <img 
+          src={~p"/images/logo.svg"} 
+          width="200" 
+          alt="Default Advertisement Image" 
+        />
+      <% end %>
+    </a>
+    <div class="p-6 w-full">
+      <h2><a href={~p"/advertisements/#{ad.id}"}><%= ad.title %></a></h2>
+      <p><%= ad.description %></p>
+      <span><%= "#{ad.street}, #{ad.city}, #{ad.area}, #{ad.country}" %></span>
+    </div>
+  </div>
+<% end %>

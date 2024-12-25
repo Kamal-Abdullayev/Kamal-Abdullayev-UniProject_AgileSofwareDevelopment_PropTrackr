@@ -1,0 +1,5 @@
+<h1 class="border-b py-2 text-2xl font-semibold">Edit profile information</h1>
+
+<.user_edit_form changeset={@changeset} action={~p"/users/#{@user}/edit"} />
+
+<.back navigate={~p"/settings"}>Back</.back>

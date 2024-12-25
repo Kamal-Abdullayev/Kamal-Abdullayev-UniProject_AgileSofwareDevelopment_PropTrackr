@@ -1,0 +1,31 @@
+<header class="px-4 sm:px-6 lg:px-8">
+  <div class="flex items-center justify-between border-b border-zinc-100 py-3 text-sm">
+    <div class="flex items-center gap-4">
+      <a href="/">
+        <img src={~p"/images/logo.svg"} width="36" />
+      </a>
+    </div>
+    <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
+      <%= if Proptrackr.Authentication.load_current_user(@conn) do %>
+        <%= if Proptrackr.Authentication.load_current_user(@conn).is_admin do %>
+          <.link href={~p"/users"}>Users</.link>
+        <% end %>
+        <.link href={~p"/settings"}>
+          Hello <%= Proptrackr.Authentication.load_current_user(@conn).firstname %>
+        </.link>
+        <.link id="logout" href={~p"/sessions/#{Proptrackr.Authentication.load_current_user(@conn)}"} method="delete">Log out</.link>
+      <% else %>
+        <.link href={~p"/sessions/new"}>Log in</.link>
+        <a href="/register" class="hover:text-zinc-700">
+          Register
+        </a>
+      <% end %>
+    </div>
+  </div>
+</header>
+<main class="px-4 py-20 sm:px-6 lg:px-8">
+  <div class="mx-auto">
+    <.flash_group flash={@flash} />
+    <%= @inner_content %>
+  </div>
+</main>

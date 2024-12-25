@@ -1,0 +1,111 @@
+<.back navigate={~p"/advertisements"}>Back to advertisements</.back>
+
+<.simple_form :let={f} for={@changeset} action={@action} multipart>
+  <.error :if={@changeset.action}>
+    Oops, something went wrong! Please check the errors below.
+  </.error>
+
+  <.input id="title" field={f[:title]} type="text" label="Title" />
+  <.input id="description" field={f[:description]} type="text" label="Description" />
+  <.input id="country" field={f[:country]} type="select" label="Country" options={@countries} required />
+  <.input id="city" field={f[:city]} type="select" label="City" options={@cities} required />
+  <.input id="area" field={f[:area]} type="select" label="Area" options={@areas} required />
+  <.input id="street" field={f[:street]} type="text" label="Street" />
+  <.input id="price" field={f[:price]} type="number" label="Price" step="any" />
+  <.input id="phone_number" field={f[:phone_number]} type="text" label="Phone number" />
+  <.input id="square_meters" field={f[:square_meters]} type="number" label="Square meters" />
+  <.input id="rooms" field={f[:rooms]} type="number" label="Rooms" />
+  <.input id="floor" field={f[:floor]} type="number" label="Floor" />
+  <.input id="total_floors" field={f[:total_floors]} type="number" label="Total floors" />
+  <.input id="state" field={f[:state]} type="select" label="State" options={["Available","Reserved", "Sold"]} required />
+  <.input id="type" field={f[:type]} type="select" label="Type" options={["Rent", "Sale"]} required />
+  <.input id="advertisement_recommended_price" field={f[:recommended_price]} type="text" label="Recommended Price:" readonly />
+
+  <input type="file" id="photo" name="advertisement[photo][]" multiple>
+
+  <!-- Display existing images with delete option -->
+  <div>
+    <h3>Existing Images</h3>
+    <%= for image_path <- @existing_images || [] do %>
+      <div>
+        <img src={image_path} class="edit-image-preview" />
+        <input type="checkbox" name="advertisement[deleted_images][]" value={image_path}> Delete
+      </div>
+    <% end %>
+  </div>
+
+  <:actions>
+    <.button id="save_button">Save Advertisement</.button>
+    <.button id="get-recommended-price" type="button">Get Recommended Price</.button>
+
+  </:actions>
+</.simple_form>
+
+
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var recommendedPriceButton = document.getElementById('get-recommended-price');
+    if (recommendedPriceButton) {
+      recommendedPriceButton.addEventListener('click', function(event) {
+        // Prevent form submission
+        event.preventDefault();
+
+        // Perform the recommended price calculation
+        var squareMeters = parseFloat(document.getElementById('square_meters').value) || 0;
+        var rooms = parseFloat(document.getElementById('rooms').value) || 0;
+        var area = (document.getElementById('area').value || 'other').toLowerCase(); // Normalize to lowercase
+        var type = document.getElementById('type').value || 'Sale'; // Default to 'Sale'
+
+        var basePricePerSquareMeter;
+        switch (area) {
+          case 'karlova':
+            basePricePerSquareMeter = 1000;
+            break;
+          case 'annelinn':
+            basePricePerSquareMeter = 950;
+            break;
+          case 'kesklinn':
+            basePricePerSquareMeter = 900;
+            break;
+          case 'supilinn':
+            basePricePerSquareMeter = 800;
+            break;
+          case 'vaksali':
+            basePricePerSquareMeter = 700;
+            break;
+          case 'kadriorg':
+            basePricePerSquareMeter = 600;
+            break;
+          case 'mereäärne':
+            basePricePerSquareMeter = 500;
+            break;
+          case 'kallio':
+            basePricePerSquareMeter = 400;
+            break;
+          case 'punavuori':
+            basePricePerSquareMeter = 350;
+            break;
+          case 'kauppi':
+            basePricePerSquareMeter = 550;
+            break;
+          case 'auranranta':
+            basePricePerSquareMeter = 500;
+            break;
+          default:
+            basePricePerSquareMeter = 600;
+        }
+
+        var roomModifier = rooms * 1;
+        var recommendedPrice = basePricePerSquareMeter * squareMeters * (1 + roomModifier);
+
+        if (type === 'Rent') {
+          recommendedPrice = recommendedPrice * 0.005;
+        }
+
+        document.getElementById('advertisement_recommended_price').value = recommendedPrice.toFixed(2);
+      });
+    }
+  });
+</script>

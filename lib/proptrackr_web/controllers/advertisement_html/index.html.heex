@@ -1,0 +1,57 @@
+<.header>
+  Listing Advertisements
+  <:actions>
+    <.link href={~p"/advertisements/new"}>
+      <.button>New Advertisement</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="advertisements" rows={@advertisements} row_click={&JS.navigate(~p"/advertisements/#{&1}")}>
+  <:col :let={advertisement} label="Title"><%= advertisement.title %></:col>
+  <:col :let={advertisement} label="Price"><%= advertisement.price %></:col>
+  <:col :let={advertisement} label="Phone number"><%= advertisement.phone_number %></:col>
+  <:col :let={advertisement} label="Square meters"><%= advertisement.square_meters %></:col>
+  <:col :let={advertisement} label="Street"><%= advertisement.street %></:col>
+  <:col :let={advertisement} label="Rooms"><%= advertisement.rooms %></:col>
+  <:col :let={advertisement} label="Floor"><%= advertisement.floor %></:col>
+  <:col :let={advertisement} label="Total floors"><%= advertisement.total_floors %></:col>
+  <:col :let={advertisement} label="State">
+    <!-- Display current state in bold and underlined -->
+    <span class="font-bold underline"><%= advertisement.state %></span>
+
+    <!-- State update buttons using conditional rendering -->
+    <div class="actions">
+      <!-- Button to update state to "Available" -->
+      <form :if={advertisement.state != "Available"} action={~p"/advertisements/#{advertisement.id}/update_available"} method="post">
+        <input type="hidden" name="_csrf_token" value={get_csrf_token()}>
+        <button type="submit" class="button">Available</button>
+      </form>
+
+      <!-- Button to update state to "Reserved" -->
+      <form :if={advertisement.state != "Reserved"} action={~p"/advertisements/#{advertisement.id}/update_reserved"} method="post">
+        <input type="hidden" name="_csrf_token" value={get_csrf_token()}>
+        <button id="reserved_button" type="submit" class="button">Reserved</button>
+      </form>
+
+      <!-- Button to update state to "Sold" -->
+      <form :if={advertisement.state != "Sold"} action={~p"/advertisements/#{advertisement.id}/update_sold"} method="post">
+        <input type="hidden" name="_csrf_token" value={get_csrf_token()}>
+        <button type="submit" class="button">Sold</button>
+      </form>
+    </div>
+  </:col>
+  <:action :let={advertisement}>
+    <div class="sr-only">
+      <.link navigate={~p"/advertisements/#{advertisement}"}>Show</.link>
+    </div>
+    <.link id="edit_button" navigate={~p"/advertisements/#{advertisement}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={advertisement}>
+    <.link id="delete_button" href={~p"/advertisements/#{advertisement}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.back navigate={~p"/"}>To main page</.back>
